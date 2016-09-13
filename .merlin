@@ -1,0 +1,7 @@
+S src
+B _build
+PKG cohttp.lwt
+PKG lwt
+PKG re
+PKG tyre
+PKG uri

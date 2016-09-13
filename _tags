@@ -1,0 +1,59 @@
+# OASIS_START
+# DO NOT EDIT (digest: 391901a68b710be68318d51a00f564a9)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library rip
+"src/rip.cmxs": use_rip
+# Library rip_lwt
+"src/rip_lwt.cmxs": use_rip_lwt
+<src/*.ml{,i,y}>: pkg_cohttp
+<src/*.ml{,i,y}>: pkg_cohttp.lwt
+<src/*.ml{,i,y}>: pkg_lwt
+<src/*.ml{,i,y}>: pkg_re
+<src/*.ml{,i,y}>: pkg_result
+<src/*.ml{,i,y}>: pkg_tyre
+<src/*.ml{,i,y}>: pkg_uri
+<src/*.ml{,i,y}>: use_rip
+# Executable test
+"tests/test.byte": pkg_alcotest
+"tests/test.byte": pkg_cohttp
+"tests/test.byte": pkg_cohttp.lwt
+"tests/test.byte": pkg_lwt
+"tests/test.byte": pkg_lwt.ppx
+"tests/test.byte": pkg_ppx_deriving.show
+"tests/test.byte": pkg_re
+"tests/test.byte": pkg_result
+"tests/test.byte": pkg_threads
+"tests/test.byte": pkg_tyre
+"tests/test.byte": pkg_uri
+"tests/test.byte": use_rip
+"tests/test.byte": use_rip_lwt
+<tests/*.ml{,i,y}>: pkg_alcotest
+<tests/*.ml{,i,y}>: pkg_cohttp
+<tests/*.ml{,i,y}>: pkg_cohttp.lwt
+<tests/*.ml{,i,y}>: pkg_lwt
+<tests/*.ml{,i,y}>: pkg_lwt.ppx
+<tests/*.ml{,i,y}>: pkg_ppx_deriving.show
+<tests/*.ml{,i,y}>: pkg_re
+<tests/*.ml{,i,y}>: pkg_result
+<tests/*.ml{,i,y}>: pkg_threads
+<tests/*.ml{,i,y}>: pkg_tyre
+<tests/*.ml{,i,y}>: pkg_uri
+<tests/*.ml{,i,y}>: use_rip
+<tests/*.ml{,i,y}>: use_rip_lwt
+# OASIS_STOP
+true: warn(-40)
+<examples>: -traverse
+<tests>: -traverse

@@ -1,0 +1,56 @@
+OASISFormat:    0.3
+Name:           rip
+Version:        1.0-alpha1
+Synopsis:       Simple REST framework on top of Cohttp
+Authors:        Dario Teixeira
+License:        LGPL-2.1 with OCaml linking exception
+LicenseFile:    LICENSE
+Plugins:        META (0.3), DevFiles (0.3)
+BuildTools:     ocamlbuild, make
+Description:
+    RIP is a simple framework for building RESTful servers in OCaml.  It's basically a thin 
+    wrapper on top of Cohttp that takes care of some of the boilerplate involved in writing
+    a RESTful server.  It makes sure the proper response codes are sent when various error
+    conditions occur, and automatically routes requests based on content-type and accept
+    headers.  Another notable feature is the support for type-safe routing to resources.
+
+Flag "lwt"
+    Description:            Build auxiliary library "Rip_lwt"
+    Default:                false
+
+Library "rip"
+    Path:                   src
+    Modules:                Rip
+    BuildDepends:           cohttp, re, result, tyre, uri
+
+Library "rip_lwt"
+    Build$:                 flag(lwt)
+    Install$:               flag(lwt)
+    Path:                   src
+    Modules:                Rip_lwt
+    BuildDepends:           cohttp.lwt, lwt, rip
+    FindlibParent:          rip
+    FindlibName:            lwt
+
+Document "rip"
+    Install:                true
+    InstallDir:             $htmldir
+    Title:                  API reference for Rip
+    Type:                   ocamlbuild (0.3)
+    BuildTools+:            ocamldoc
+    XOCamlbuildPath:        src
+    XOCamlbuildLibraries:   rip
+
+Executable "test"
+    Build$:                 flag(tests) && flag(lwt)
+    Path:                   tests
+    MainIs:                 test.ml
+    Install:                false
+    BuildDepends:           alcotest, cohttp.lwt, lwt, lwt.ppx, ppx_deriving.show, rip.lwt, threads
+    CompiledObject:         byte
+
+Test "test"
+    Run$:                   flag(tests) && flag(lwt)
+    Command:                $test
+    WorkingDirectory:       tests
+

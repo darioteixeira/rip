@@ -1,0 +1,22 @@
+# OASIS_START
+# DO NOT EDIT (digest: bf9c71ec448cc1f5d9227ac9ec826040)
+version = "1.0-alpha1"
+description = "Simple REST framework on top of Cohttp"
+requires = "cohttp re result tyre uri"
+archive(byte) = "rip.cma"
+archive(byte, plugin) = "rip.cma"
+archive(native) = "rip.cmxa"
+archive(native, plugin) = "rip.cmxs"
+exists_if = "rip.cma"
+package "lwt" (
+ version = "1.0-alpha1"
+ description = "Simple REST framework on top of Cohttp"
+ requires = "cohttp.lwt lwt rip"
+ archive(byte) = "rip_lwt.cma"
+ archive(byte, plugin) = "rip_lwt.cma"
+ archive(native) = "rip_lwt.cmxa"
+ archive(native, plugin) = "rip_lwt.cmxs"
+ exists_if = "rip_lwt.cma"
+)
+# OASIS_STOP
+
