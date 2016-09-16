@@ -92,13 +92,13 @@ let run stop port =
     Database.init () >>= fun db -> 
     let callback = Rip_lwt.make_callback
         [
-        Rip_lwt.register
+        Rip_lwt.service
             ~get:[(mime, users_get db)]
             ~post:[(mime, users_post db)]
             ~delete:(users_delete db)
             ~authorize
             users;
-        Rip_lwt.register
+        Rip_lwt.service
             ~get:[(mime, user_get db)]
             ~put:[(mime, user_put db)]
             ~delete:(user_delete db)

@@ -81,12 +81,12 @@ let () =
     begin
         let callback = Rip_lwt.make_callback
             [
-            Rip_lwt.register
+            Rip_lwt.service
                 ~get:[(mime, authors_get)]
                 ~post:[(mime, authors_post)]
                 ~delete:authors_delete
                 authors;
-            Rip_lwt.register
+            Rip_lwt.service
                 ~get:[(mime, author_get)]
                 ~put:[(mime, author_put)]
                 ~delete:author_delete

@@ -140,9 +140,9 @@ sig
     type 'a setter = mime * (Cohttp.Request.t -> string option -> 'a -> Outcome.t io)
     type 'a action = Cohttp.Request.t -> 'a -> Outcome.t io
 
-    type registration
+    type service
 
-    val register:
+    val service:
         ?get:'a getter list ->
         ?put:'a setter list ->
         ?post:'a setter list ->
@@ -150,9 +150,9 @@ sig
         ?delete:'a action ->
         ?authorize:(Cohttp.Auth.credential option -> (unit, string option) result io) ->
         'a Resource.t ->
-        registration
+        service
 
-    val make_callback: registration list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
+    val make_callback: service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
 end
 
 

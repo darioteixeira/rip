@@ -120,9 +120,9 @@ sig
     type 'a setter = mime * (Cohttp.Request.t -> string option -> 'a -> Outcome.t io)
     type 'a action = Cohttp.Request.t -> 'a -> Outcome.t io
 
-    type registration
+    type service
 
-    val register:
+    val service:
         ?get:'a getter list ->
         ?put:'a setter list ->
         ?post:'a setter list ->
@@ -130,9 +130,9 @@ sig
         ?delete:'a action ->
         ?authorize:(Cohttp.Auth.credential option -> (unit, string option) result io) ->
         'a Resource.t ->
-        registration
+        service
 
-    val make_callback: registration list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
+    val make_callback: service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
 end
 
 
@@ -155,7 +155,7 @@ struct
     type 'a setter = mime * (Cohttp.Request.t -> string option -> 'a -> Outcome.t io)
     type 'a action = Cohttp.Request.t -> 'a -> Outcome.t io
 
-    type 'a unwrapped_registration =
+    type 'a unwrapped_service =
         {
         get: 'a getter list option;
         put: 'a setter list option;
@@ -166,7 +166,7 @@ struct
         resource: 'a Resource.t;
         }
 
-    type registration = Wrapped: 'a unwrapped_registration -> registration
+    type service = Wrapped: 'a unwrapped_service -> service
 
     let invoke_mime_getter req arg handlers =
         let open Accept in
@@ -216,7 +216,7 @@ struct
         | (`DELETE, {delete = Some handler; _}) -> handler req arg
         | _                                     -> Backend.return @@ Outcome.method_not_allowed None
 
-    let register ?get ?put ?post ?patch ?delete ?authorize resource =
+    let service ?get ?put ?post ?patch ?delete ?authorize resource =
         Wrapped {get; put; post; patch; delete; authorize; resource}
 
     let make_callback regs = fun _conn req body ->
