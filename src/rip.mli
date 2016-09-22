@@ -22,6 +22,9 @@ module Arg:
 sig
     type 'a t
 
+    val int: int t
+    val int32: int32 t
+    val int64: int64 t
     val uint: int t
     val uint32: int32 t
     val uint64: int64 t

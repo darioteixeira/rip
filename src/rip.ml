@@ -26,7 +26,11 @@ struct
     let identity x = x
     let try_ f x = match f x with v -> Some v | exception _ -> None
     let digits = Re.(rep1 digit)
+    let neg_digits = Re.(seq [opt (char '-'); digits])
 
+    let int = Tyre.int
+    let int32 = Tyre.conv ~name:"int32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex neg_digits)
+    let int64 = Tyre.conv ~name:"int64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex neg_digits)
     let uint = Tyre.pos_int
     let uint32 = Tyre.conv ~name:"uint32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex digits)
     let uint64 = Tyre.conv ~name:"uint64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex digits)
