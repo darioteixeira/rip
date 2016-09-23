@@ -113,6 +113,10 @@ sig
     val internal_server_error: string option -> t
     (** Code is [500 INTERNAL SERVER ERROR]. The server experienced an internal error.
         More information is expected in the reponse body. *)
+
+    val not_implemented: string option -> t
+    (** Code is [501 NOT IMPLEMENTED]. The server cannot carry out the request, possibly
+        because the functionality is not yet implemented. *)
 end
 
 
