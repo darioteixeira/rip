@@ -214,12 +214,30 @@ struct
             | _                       -> assert false   (* This should never happen *)
 
     let invoke svc req body arg = match (Request.meth req, svc) with
-        | (`GET, {get = Some handlers; _})      -> invoke_mime_getter req arg handlers
-        | (`PUT, {put = Some handlers; _})      -> invoke_mime_setter req body arg handlers
-        | (`POST, {post = Some handlers; _})    -> invoke_mime_setter req body arg handlers
-        | (`PATCH, {patch = Some handlers; _})  -> invoke_mime_setter req body arg handlers
-        | (`DELETE, {delete = Some handler; _}) -> handler req arg
-        | _                                     -> Backend.return @@ Outcome.method_not_allowed None
+        | (`GET, {get = Some handlers; _}) ->
+            invoke_mime_getter req arg handlers
+        | (`PUT, {put = Some handlers; _}) ->
+            invoke_mime_setter req body arg handlers
+        | (`POST, {post = Some handlers; _}) ->
+            invoke_mime_setter req body arg handlers
+        | (`PATCH, {patch = Some handlers; _}) ->
+            invoke_mime_setter req body arg handlers
+        | (`DELETE, {delete = Some handler; _}) ->
+            handler req arg
+        | (`OPTIONS, svc) ->
+            let add name meth accum = match meth with Some _ -> name :: accum | None -> accum in
+            let allowed =
+                ["OPTIONS"] |>
+                add "GET" svc.get |>
+                add "PUT" svc.put |>
+                add "POST" svc.post |>
+                add "PATCH" svc.patch |>
+                add "DELETE" svc.delete |>
+                String.concat ", " in
+            let headers = Header.init_with "Allow" allowed in
+            Backend.return @@ (Response.make ~status:`OK ~headers (), None)
+        | _ ->
+            Backend.return @@ Outcome.method_not_allowed None
 
     let service ?get ?put ?post ?patch ?delete ?authorize resource =
         Wrapped {get; put; post; patch; delete; authorize; resource}
