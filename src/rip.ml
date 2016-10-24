@@ -213,7 +213,7 @@ struct
             | [(_, (media_range, _))] -> loop media_range handlers
             | _                       -> assert false   (* This should never happen *)
 
-    let invoke reg req body arg = match (Request.meth req, reg) with
+    let invoke svc req body arg = match (Request.meth req, svc) with
         | (`GET, {get = Some handlers; _})      -> invoke_mime_getter req arg handlers
         | (`PUT, {put = Some handlers; _})      -> invoke_mime_setter req body arg handlers
         | (`POST, {post = Some handlers; _})    -> invoke_mime_setter req body arg handlers
@@ -224,7 +224,7 @@ struct
     let service ?get ?put ?post ?patch ?delete ?authorize resource =
         Wrapped {get; put; post; patch; delete; authorize; resource}
 
-    let make_callback regs = fun _conn req body ->
+    let make_callback svcs = fun _conn req body ->
         let path = req |> Request.uri |> Uri.path in
         let rec loop = function
             | [] ->
@@ -244,7 +244,7 @@ struct
                     end
                 | Error _ ->
                     loop tl in
-        loop regs >>= fun (response, body) ->
+        loop svcs >>= fun (response, body) ->
         Backend.body_of_string_option body >>= fun body ->
         Backend.return (response, body)
 end
