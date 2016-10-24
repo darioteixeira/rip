@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 391901a68b710be68318d51a00f564a9)
+# DO NOT EDIT (digest: e4bfcd9fc3bcce8311197a69c15fcfb3)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -27,19 +27,19 @@ true: annot, bin_annot
 <src/*.ml{,i,y}>: pkg_uri
 <src/*.ml{,i,y}>: use_rip
 # Executable test
-"tests/test.byte": pkg_alcotest
-"tests/test.byte": pkg_cohttp
-"tests/test.byte": pkg_cohttp.lwt
-"tests/test.byte": pkg_lwt
-"tests/test.byte": pkg_lwt.ppx
-"tests/test.byte": pkg_ppx_deriving.show
-"tests/test.byte": pkg_re
-"tests/test.byte": pkg_result
-"tests/test.byte": pkg_threads
-"tests/test.byte": pkg_tyre
-"tests/test.byte": pkg_uri
-"tests/test.byte": use_rip
-"tests/test.byte": use_rip_lwt
+<tests/test.{native,byte}>: pkg_alcotest
+<tests/test.{native,byte}>: pkg_cohttp
+<tests/test.{native,byte}>: pkg_cohttp.lwt
+<tests/test.{native,byte}>: pkg_lwt
+<tests/test.{native,byte}>: pkg_lwt.ppx
+<tests/test.{native,byte}>: pkg_ppx_deriving.show
+<tests/test.{native,byte}>: pkg_re
+<tests/test.{native,byte}>: pkg_result
+<tests/test.{native,byte}>: pkg_threads
+<tests/test.{native,byte}>: pkg_tyre
+<tests/test.{native,byte}>: pkg_uri
+<tests/test.{native,byte}>: use_rip
+<tests/test.{native,byte}>: use_rip_lwt
 <tests/*.ml{,i,y}>: pkg_alcotest
 <tests/*.ml{,i,y}>: pkg_cohttp
 <tests/*.ml{,i,y}>: pkg_cohttp.lwt

@@ -47,7 +47,7 @@ Executable "test"
     MainIs:                 test.ml
     Install:                false
     BuildDepends:           alcotest, cohttp.lwt, lwt, lwt.ppx, ppx_deriving.show, rip.lwt, threads
-    CompiledObject:         byte
+    CompiledObject:         best
 
 Test "test"
     Run$:                   flag(tests) && flag(lwt)
