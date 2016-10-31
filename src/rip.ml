@@ -246,7 +246,7 @@ struct
         let path = req |> Request.uri |> Uri.path in
         let rec loop = function
             | [] ->
-                assert false
+                Backend.return @@ Outcome.not_found None
             | Wrapped hd :: tl -> match Tyre.exec hd.resource.comp path with
                 | Ok arg ->
                     begin
