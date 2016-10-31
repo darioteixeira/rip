@@ -250,9 +250,9 @@ struct
             | Wrapped hd :: tl -> match Tyre.exec hd.resource.comp path with
                 | Ok arg ->
                     begin
-                        begin match hd.authorize with
-                            | None   -> Backend.return @@ Ok ()
-                            | Some f -> req |> Request.headers |> Header.get_authorization |> f
+                        begin match (Request.meth req, hd.authorize) with
+                            | (`OPTIONS, _) | (_, None) -> Backend.return @@ Ok ()
+                            | (_, Some f)               -> req |> Request.headers |> Header.get_authorization |> f
                         end >>= function
                             | Ok () ->
                                 Backend.string_option_of_body body >>= fun body ->
