@@ -29,12 +29,12 @@ struct
     let neg_digits = Re.(seq [opt (char '-'); digits])
 
     let int = Tyre.int
-    let int32 = Tyre.conv ~name:"int32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex neg_digits)
-    let int64 = Tyre.conv ~name:"int64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex neg_digits)
+    let int32 = Tyre.conv_fail ~name:"int32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex neg_digits)
+    let int64 = Tyre.conv_fail ~name:"int64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex neg_digits)
     let uint = Tyre.pos_int
-    let uint32 = Tyre.conv ~name:"uint32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex digits)
-    let uint64 = Tyre.conv ~name:"uint64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex digits)
-    let alnum = Tyre.conv ~name:"alnum" (try_ identity) identity (Tyre.regex Re.(rep1 @@ alt [rg 'a' 'z'; rg 'A' 'Z'; rg '0' '9']))
+    let uint32 = Tyre.conv_fail ~name:"uint32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex digits)
+    let uint64 = Tyre.conv_fail ~name:"uint64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex digits)
+    let alnum = Tyre.conv_fail ~name:"alnum" (try_ identity) identity (Tyre.regex Re.(rep1 @@ alt [rg 'a' 'z'; rg 'A' 'Z'; rg '0' '9']))
 end
 
 module Path =
@@ -51,10 +51,10 @@ struct
     let (</>) path arg = Seq (path, arg)
 
     let rec to_tyre: type a. a t -> a Tyre.t = function
-        | Const str          -> Tyre.conv ~name:"unit" (function _ -> Some ()) (fun () -> "/" ^ str) (Tyre.regex @@ Re.str ("/" ^ str))
-        | Prefix (str, arg)  -> Tyre.prefixstr (Printf.sprintf "/%s/" str) arg
-        | Suffix (path, str) -> Tyre.suffixstr (to_tyre path) ("/" ^ str)
-        | Seq (path, arg)    -> Tyre.seq (Tyre.suffixstr (to_tyre path) "/") arg
+        | Const str          -> Tyre.conv_fail ~name:"unit" (function _ -> Some ()) (fun () -> "/" ^ str) (Tyre.regex @@ Re.str ("/" ^ str))
+        | Prefix (str, arg)  -> Tyre.prefix (Tyre.str (Printf.sprintf "/%s/" str)) arg
+        | Suffix (path, str) -> Tyre.suffix (to_tyre path) (Tyre.str ("/" ^ str))
+        | Seq (path, arg)    -> Tyre.seq (Tyre.suffix (to_tyre path) (Tyre.str "/")) arg
 end
 
 module Resource =
@@ -67,7 +67,7 @@ struct
 
     let make path =
         let orig = Path.to_tyre path in
-        let comp = Tyre.compile orig in
+        let comp = Tyre.compile (Tyre.whole_string orig) in
         {orig; comp}
 
     let apply {orig; _} arg =
