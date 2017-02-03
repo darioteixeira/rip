@@ -137,7 +137,7 @@ sig
         'a Resource.t ->
         service
 
-    val make_callback: service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
+    val make_callback: ?logger:(string -> unit io) -> service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
 end
 
 
@@ -242,10 +242,11 @@ struct
     let service ?get ?put ?post ?patch ?delete ?authorize resource =
         Wrapped {get; put; post; patch; delete; authorize; resource}
 
-    let make_callback svcs = fun _conn req body ->
+    let make_callback ?(logger = fun _str -> Backend.return ()) svcs = fun _conn req body ->
         let path = req |> Request.uri |> Uri.path in
         let rec loop = function
             | [] ->
+                logger (Printf.sprintf "Unable to handle resource '%s'" path) >>= fun () ->
                 Backend.return @@ Outcome.not_found None
             | Wrapped hd :: tl -> match Tyre.exec hd.resource.comp path with
                 | Ok arg ->
