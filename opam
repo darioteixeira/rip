@@ -1,6 +1,6 @@
 opam-version: "1.2"
 name: "rip"
-version: "1.0-alpha1"
+version: "1.0-alpha2"
 maintainer: "Dario Teixeira <dario.teixeira@nleyten.com>"
 authors: ["Dario Teixeira <dario.teixeira@nleyten.com>"]
 homepage: "https://github.com/darioteixeira/rip"
@@ -26,7 +26,7 @@ depends: [
   "ocamlfind"
   "re"
   "result"
-  "tyre"
+  "tyre" {>= "0.2"}
   "uri"
 ]
 depopts: ["lwt"]
