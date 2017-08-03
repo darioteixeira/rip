@@ -23,6 +23,7 @@ depends: [
   "alcotest" {test}
   "cohttp" {>= "0.99"}
   "cohttp-lwt-unix" {>= "0.99"}
+  "lwt"
   "ocamlbuild" {build}
   "ocamlfind"
   "re"
@@ -30,4 +31,3 @@ depends: [
   "tyre" {= "0.2"}
   "uri"
 ]
-depopts: ["lwt"]
