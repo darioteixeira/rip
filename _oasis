@@ -28,7 +28,7 @@ Library "rip_lwt"
     Install$:               flag(lwt)
     Path:                   src
     Modules:                Rip_lwt
-    BuildDepends:           cohttp.lwt, lwt, rip
+    BuildDepends:           cohttp-lwt-unix, lwt, rip
     FindlibParent:          rip
     FindlibName:            lwt
 
@@ -46,7 +46,7 @@ Executable "test"
     Path:                   tests
     MainIs:                 test.ml
     Install:                false
-    BuildDepends:           alcotest, cohttp.lwt, lwt, lwt.ppx, ppx_deriving.show, rip.lwt, threads
+    BuildDepends:           alcotest, cohttp-lwt-unix, lwt, lwt.ppx, ppx_deriving.show, rip.lwt, threads
     CompiledObject:         best
 
 Test "test"
