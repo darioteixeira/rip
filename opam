@@ -7,7 +7,6 @@ homepage: "https://github.com/darioteixeira/rip"
 bug-reports: "https://github.com/darioteixeira/rip/issues"
 dev-repo: "https://github.com/darioteixeira/rip.git"
 license: "LGPL-2.1 with OCaml linking exception"
-available: [ocaml-version >= "4.02.0"]
 build: [
   ["./configure" "--prefix" prefix
                  "--docdir" "%{doc}%/rip"
