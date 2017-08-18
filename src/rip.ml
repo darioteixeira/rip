@@ -35,6 +35,7 @@ struct
     let uint32 = Tyre.conv_fail ~name:"uint32" (try_ Int32.of_string) (Int32.to_string) (Tyre.regex digits)
     let uint64 = Tyre.conv_fail ~name:"uint64" (try_ Int64.of_string) (Int64.to_string) (Tyre.regex digits)
     let alnum = Tyre.conv_fail ~name:"alnum" (try_ identity) identity (Tyre.regex Re.(rep1 @@ alt [rg 'a' 'z'; rg 'A' 'Z'; rg '0' '9']))
+    let any = Tyre.conv_fail ~name:"any" (try_ identity) identity (Tyre.regex Re.(rep1 any))
 end
 
 module Path =
