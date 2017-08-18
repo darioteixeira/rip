@@ -29,6 +29,7 @@ sig
     val uint32: int32 t
     val uint64: int64 t
     val alnum: string t
+    val oid: string t
     val any: string t
 end
 
