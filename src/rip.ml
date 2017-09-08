@@ -139,7 +139,11 @@ sig
         'a Resource.t ->
         service
 
-    val make_callback: ?logger:(string -> unit io) -> service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
+    val make_callback:
+        ?log_ok:(string -> unit io) ->
+        ?log_error:(string -> unit io) ->
+        service list ->
+        (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
 end
 
 
@@ -244,11 +248,11 @@ struct
     let service ?get ?put ?post ?patch ?delete ?authorize resource =
         Wrapped {get; put; post; patch; delete; authorize; resource}
 
-    let make_callback ?(logger = fun _str -> Backend.return ()) svcs = fun _conn req body ->
+    let make_callback ?(log_ok = fun _str -> Backend.return ()) ?(log_error = fun _str -> Backend.return ()) svcs = fun _conn req body ->
         let path = req |> Request.uri |> Uri.path in
         let rec loop = function
             | [] ->
-                logger (Printf.sprintf "Unable to handle resource '%s'" path) >>= fun () ->
+                log_error (Printf.sprintf "Non-existent resource '%s'" path) >>= fun () ->
                 Backend.return @@ Outcome.not_found None
             | Wrapped hd :: tl -> match Tyre.exec hd.resource.comp path with
                 | Ok arg ->
@@ -258,9 +262,11 @@ struct
                             | (_, Some f)               -> req |> Request.headers |> Header.get_authorization |> f
                         end >>= function
                             | Ok () ->
+                                log_ok (Printf.sprintf "Handling resource '%s'" path) >>= fun () ->
                                 Backend.string_option_of_body body >>= fun body ->
                                 invoke hd req body arg
                             | Error body ->
+                                log_error (Printf.sprintf "Unauthorized for resource '%s'" path) >>= fun () ->
                                 Backend.return @@ Outcome.unauthorized body
                     end
                 | Error _ ->

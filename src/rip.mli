@@ -161,7 +161,11 @@ sig
         'a Resource.t ->
         service
 
-    val make_callback: ?logger:(string -> unit io) -> service list -> (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
+    val make_callback:
+        ?log_ok:(string -> unit io) ->
+        ?log_error:(string -> unit io) ->
+        service list ->
+        (conn -> Cohttp.Request.t -> body -> (Cohttp.Response.t * body) io)
 end
 
 
