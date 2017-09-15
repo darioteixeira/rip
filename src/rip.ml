@@ -262,7 +262,7 @@ struct
                             | (_, Some f)               -> req |> Request.headers |> Header.get_authorization |> f
                         end >>= function
                             | Ok () ->
-                                log_ok (Printf.sprintf "Handling resource '%s'" path) >>= fun () ->
+                                log_ok (Printf.sprintf "Handling %s on resource '%s'" (req |> Request.meth |> Code.string_of_method) path) >>= fun () ->
                                 Backend.string_option_of_body body >>= fun body ->
                                 invoke hd req body arg
                             | Error body ->
