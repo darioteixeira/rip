@@ -7,7 +7,7 @@
 include Rip.Make
 (struct
     type 'a io = 'a Lwt.t
-    type body = Cohttp_lwt_body.t
+    type body = Cohttp_lwt.Body.t
     type conn = Cohttp_lwt_unix.Server.IO.conn * Cohttp.Connection.t
 
     let return = Lwt.return
@@ -21,6 +21,6 @@ include Rip.Make
         | `Empty         -> Lwt.return_none
         | `String x      -> Lwt.return_some x
         | `Strings xs    -> Lwt.return_some (String.concat "" xs)
-        | `Stream _ as x -> Cohttp_lwt_body.to_string x >>= fun str -> Lwt.return_some str
+        | `Stream _ as x -> Cohttp_lwt.Body.to_string x >>= fun str -> Lwt.return_some str
 end)
 
