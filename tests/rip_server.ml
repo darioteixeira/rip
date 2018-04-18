@@ -47,7 +47,7 @@ let users_post db req body () = match body with
         Lwt.return (Outcome.bad_request None)
 
 let users_delete db _req () =
-    Database.delete_all db >>
+    Database.delete_all db >>= fun () ->
     Lwt.return Outcome.no_content
 
 
