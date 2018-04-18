@@ -45,11 +45,11 @@ let run ?credential ?accept ?(payload = None) port meth path =
         add Header.add_authorization credential |>
         add (fun h v -> Header.add h "Accept" v) accept |>
         add (fun h v -> Header.add h "Content-Type" v) content_type in
-    let body = Cohttp_lwt_body.of_string body in
+    let body = Cohttp_lwt.Body.of_string body in
     let uri = Uri.make ~scheme:"http" ~host:Config.host ~port ~path () in
     Cohttp_lwt_unix.Client.call ~headers ~body meth uri >>= fun (response, body) ->
     let status = Response.status response in
     let media = response |> Response.headers |> Header.get_media_type in
-    Cohttp_lwt_body.to_string body >>= fun body ->
+    Cohttp_lwt.Body.to_string body >>= fun body ->
     Lwt.return {status; media; body}
 
